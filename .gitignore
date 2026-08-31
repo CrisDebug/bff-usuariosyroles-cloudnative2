@@ -1,0 +1,10 @@
+target/
+*.tar
+*.pem
+*.key
+.env
+*.env.*
+wallet/
+Wallet_*/
+.idea/
+.vscode/
