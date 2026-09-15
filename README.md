@@ -225,3 +225,69 @@ Docker - ms-bff
 Repositorio GitHub:
 
 `https://github.com/CrisDebug/bff-usuariosyroles-cloudnative2`
+
+## Implementación Semana 5 - REST y GraphQL
+
+Como parte de la actividad de Desarrollo Cloud Native II, se incorporaron
+interfaces REST y GraphQL para las funcionalidades de Usuarios y Roles.
+
+### Azure Functions implementadas
+
+La solución cuenta con cuatro Azure Functions asociadas a los dominios
+Usuarios y Roles:
+
+| Función | Tecnología | Descripción |
+|---|---|---|
+| `usuariosJava` | REST | CRUD de Usuarios |
+| `rolesJava` | REST | CRUD de Roles |
+| `usuariosGraphQL` | GraphQL | Queries y Mutations de Usuarios |
+| `rolesGraphQL` | GraphQL | Queries y Mutations de Roles |
+
+Las funciones fueron desarrolladas en Java 17 y desplegadas en Azure Functions.
+
+### GraphQL
+
+Se implementaron esquemas GraphQL independientes para Usuarios y Roles.
+
+#### Usuarios
+
+Las operaciones disponibles incluyen:
+
+- Consulta de todos los usuarios.
+- Consulta de un usuario por ID.
+- Creación de usuarios.
+- Actualización de usuarios.
+- Eliminación de usuarios.
+
+Ejemplo de consulta:
+
+```graphql
+{
+  usuarios {
+    id
+    nombre
+    email
+    rolId
+    rol
+  }
+}
+
+                    Cliente
+                       |
+              +--------+--------+
+              |                 |
+             REST           GraphQL
+              |                 |
+              v                 v
+        BFF Spring Boot    BFF GraphQL
+              |                 |
+              +--------+--------+
+                       |
+             Azure Functions
+                /          \
+               /            \
+      usuariosJava       rolesJava
+            |                 |
+            +-------+---------+
+                    |
+                 Oracle
