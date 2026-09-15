@@ -1,0 +1,34 @@
+type Cliente {
+  id: ID
+  nombre: String
+  correo: String
+}
+
+type Mascota {
+  id: ID
+  nombre: String
+}
+
+type Usuario {
+  id: ID
+  nombre: String
+  email: String
+  rolId: ID
+  rol: String
+}
+
+type Rol {
+  id: ID
+  nombre: String
+}
+
+type Query {
+  clientes: [Cliente]
+  mascotas: [Mascota]
+
+  usuarios: [Usuario]
+  usuario(id: ID!): Usuario
+
+  roles: [Rol]
+  rol(id: ID!): Rol
+}
