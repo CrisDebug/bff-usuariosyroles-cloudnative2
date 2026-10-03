@@ -291,3 +291,53 @@ Ejemplo de consulta:
             +-------+---------+
                     |
                  Oracle
+
+                 ---
+
+# Implementación actual - Arquitectura orientada a eventos
+
+Como evolución de la arquitectura inicial, el BFF mantiene su función como punto de entrada para Usuarios y Roles, mientras que las operaciones CRUD son delegadas a Azure Functions.
+
+Adicionalmente, las operaciones de creación generan eventos que son procesados mediante Azure Event Grid y registrados posteriormente en Azure Cosmos DB para trazabilidad.
+
+## Arquitectura actual
+
+```text
+                         Cliente / Postman
+                                |
+                                v
+                         ┌──────────────┐
+                         │   AWS EC2    │
+                         │              │
+                         │ BFF Spring   │
+                         │    Boot      │
+                         └──────┬───────┘
+                                |
+                   ┌────────────┴────────────┐
+                   |                         |
+                   v                         v
+            usuariosJava               rolesJava
+            Azure Function             Azure Function
+                   |                         |
+                   v                         v
+                Oracle                    Oracle
+                   |                         |
+                   v                         v
+       generarEventoUsuarioJava     generarEventoRolJava
+                   |                         |
+                   └────────────┬────────────┘
+                                v
+                       Azure Event Grid
+                                |
+                   ┌────────────┴────────────┐
+                   |                         |
+                   v                         v
+          sub-usuarios-function      sub-roles-function
+                   |                         |
+                   v                         v
+          eventoUsuarioJava           eventoRolJava
+                   |                         |
+                   └────────────┬────────────┘
+                                v
+                         Azure Cosmos DB
+                          trazabilidad
